@@ -1,6 +1,7 @@
 package Controller;
 
 import Model.ScoreDTO;
+import Model.ScreenDTO;
 
 import java.util.ArrayList;
 
@@ -84,6 +85,24 @@ public class ScoreController {
             if(b.getUserId()==id){
                 b.setNickName(changeName);
             }
+        }
+    }
+
+    public double getAverage(int movieId){
+        double total = 0.0;
+        double sum = 0.0;
+        double avg;
+        for(ScoreDTO s : list){
+            if(s.getMovieId()==movieId){
+                total = total+1.0;
+                sum = sum + (double)s.getScore();
+            }
+        }
+        if(total!=0) {
+            avg = sum / total;
+            return avg;
+        }else{
+            return 0.0;
         }
     }
 

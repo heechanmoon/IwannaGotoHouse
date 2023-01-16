@@ -28,7 +28,6 @@ public class MovieViewer {
         this.userViewer = userViewer;
     }
     public void setTheaterViewer(TheaterViewer theaterViewer) { this.theaterViewer = theaterViewer; }
-
     public void setScoreViewer(ScoreViewer scoreViewer){
         this.scoreViewer = scoreViewer;
     }
@@ -112,6 +111,7 @@ public class MovieViewer {
     private void printOne(int id) {
         MovieDTO temp = new MovieDTO();
         temp.setId(id);
+        double scoreAverage = scoreViewer.getAverage(id);
 
         ArrayList<MovieDTO> movieList = movieController.getList();
 
@@ -129,6 +129,11 @@ public class MovieViewer {
             System.out.println("영화 등급: 청소년 관람 불가");
         }
         System.out.printf("줄거리: %s\n",b.getStory());
+        if(scoreAverage!=0) {
+            System.out.printf("평균 평점: %.2f\n", scoreAverage);
+        }else{
+            System.out.println("아직 평점이 없습니다.");
+        }
         System.out.println("==================================");
 
         scoreViewer.setMovieNumber(b);

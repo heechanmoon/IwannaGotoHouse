@@ -80,34 +80,44 @@ public class ScoreViewer {
                     if (logIn.getLevel() != 2) {
                         writeComment();
                     } else {
-                        System.out.println("관리자는 평점을 추가하거나 수정할 수 없습니다.");
+                        System.out.println("관리자는 평점을 추가할 수 없습니다.");
                     }
                 } else if (userChoice == 2) {
-                    message = "삭제할 평점의 번호를 입력해주세요.";
-                    userChoice = ScannerUtil.nextInt(SCANNER, message);
-                    b = scoreController.selectById(movieNumber.getId(), userChoice);
-                    if (b != null && b.getUserId() == logIn.getId()) {
-                        scoreController.delete(b.getId());
-                    } else {
-                        System.out.println("이미 존재하지 않는 평점의 번호이거나 삭제할 권한이 없습니다.");
+                    if(logIn.getLevel() !=2) {
+                        message = "삭제할 평점의 번호를 입력해주세요.";
+                        userChoice = ScannerUtil.nextInt(SCANNER, message);
+                        b = scoreController.selectById(movieNumber.getId(), userChoice);
+                        if (b != null && b.getUserId() == logIn.getId()) {
+                            scoreController.delete(b.getId());
+                        } else {
+                            System.out.println("이미 존재하지 않는 평점의 번호이거나 삭제할 권한이 없습니다.");
+                        }
+                    }else{
+                        System.out.println("관리자는 평점에 대한 수정 및 삭제 권한이 없습니다.");
                     }
                 } else if (userChoice == 3) {
-                    message = "수정할 평점의 번호를 입력해주세요.";
-                    userChoice = ScannerUtil.nextInt(SCANNER, message);
-                    b = scoreController.selectById(movieNumber.getId(), userChoice);
-                    if (b != null && b.getUserId() == logIn.getId()) {
-                        message = "수정할 평점을 입력해주세요.";
-                        b.setScore(ScannerUtil.nextInt(SCANNER, message, 1, 10));
+                    if(logIn.getLevel()!=2) {
+                        message = "수정할 평점의 번호를 입력해주세요.";
+                        userChoice = ScannerUtil.nextInt(SCANNER, message);
+                        b = scoreController.selectById(movieNumber.getId(), userChoice);
+                        if (b != null && b.getUserId() == logIn.getId()) {
+                            message = "수정할 평점을 입력해주세요.";
+                            b.setScore(ScannerUtil.nextInt(SCANNER, message, 1, 10));
 
-                        if (logIn.getLevel() == 1) {
-                            message = "수정할 평론을 입력해주세요.";
-                            b.setReview(ScannerUtil.nextLine(SCANNER, message));
+                            if (logIn.getLevel() == 1) {
+                                message = "수정할 평론을 입력해주세요.";
+                                b.setReview(ScannerUtil.nextLine(SCANNER, message));
+                            }
+                            scoreController.update(b.getId(), b);
+                        } else {
+                            System.out.println("존재하지 않는 평점의 번호이거나 수정할 권한이 없습니다.");
                         }
-                        scoreController.update(b.getId(), b);
-                    } else {
-                        System.out.println("존재하지 않는 평점의 번호이거나 수정할 권한이 없습니다.");
+                    }else{
+                        System.out.println("관리자는 평점에 대한 수정 및 삭제 권한이 없습니다.");
                     }
                 }
+
+                printList(0);
             }
         }
     }
@@ -146,6 +156,12 @@ public class ScoreViewer {
 
     public void changeNickname(int id, String changeName){
         scoreController.nicknameChange(id, changeName);
+    }
+
+    public double getAverage(int movieId){
+        double avg;
+        avg = scoreController.getAverage(movieId);
+        return avg;
     }
 
     /*
