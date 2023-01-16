@@ -2,12 +2,20 @@ package Model;
 
 public class ScoreDTO {
     private int id;
-    private String userId;
+    private int userId;
     private int movieId;
     private int score;
     private String review;
-
     private int scoreNumber;
+    private String nickName;
+
+    public String getNickName() {
+        return nickName;
+    }
+
+    public void setNickName(String nickName) {
+        this.nickName = nickName;
+    }
 
     public int getScoreNumber() {
         return scoreNumber;
@@ -24,11 +32,11 @@ public class ScoreDTO {
         this.id = id;
     }
 
-    public String getUserId() {
+    public int getUserId() {
         return userId;
     }
 
-    public void setUserId(String userId) {
+    public void setUserId(int userId) {
         this.userId = userId;
     }
 

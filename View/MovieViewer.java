@@ -15,6 +15,7 @@ public class MovieViewer {
     private final String DATE_FORMAT = "yy/MM/dd HH:mm:ss";
     private MovieController movieController;
     private ScoreViewer scoreViewer;
+    private TheaterViewer theaterViewer;
     private UserViewer userViewer;
     private UserDTO logIn;
 
@@ -26,6 +27,7 @@ public class MovieViewer {
     public void setUserViewer(UserViewer userViewer){
         this.userViewer = userViewer;
     }
+    public void setTheaterViewer(TheaterViewer theaterViewer) { this.theaterViewer = theaterViewer; }
 
     public void setScoreViewer(ScoreViewer scoreViewer){
         this.scoreViewer = scoreViewer;
@@ -75,6 +77,8 @@ public class MovieViewer {
         b.setLevel(ScannerUtil.nextInt(SCANNER,message,1,4));
 
         movieController.insert(b);
+
+        theaterViewer.setMovieList(movieController.getList());
     }
 
     private void printList() {
@@ -149,12 +153,14 @@ public class MovieViewer {
             b.setStory(ScannerUtil.nextLine(SCANNER, message));
 
             movieController.update(b);
-
+            theaterViewer.setMovieList(movieController.getList());
             printOne(id);
         } else if (userChoice == 2) {
             movieController.delete(b.getId());
+            theaterViewer.setMovieList(movieController.getList());
         } else if (userChoice == 3){
-            scoreViewer.printList();
+            scoreViewer.printList(0);
+            printOne(id);
         } else {
             printList();
         }

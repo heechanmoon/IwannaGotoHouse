@@ -16,7 +16,7 @@ public class TheaterViewer {
     private final Scanner SCANNER;
     private final String DATE_FORMAT = "yy/MM/dd HH:mm:ss";
     private TheaterController theaterController;
-    private MovieController movieController;
+    private ArrayList<MovieDTO> movieList;
     private ScreenViewer screenViewer;
     private UserViewer userViewer;
     private UserDTO logIn;
@@ -24,7 +24,6 @@ public class TheaterViewer {
     public TheaterViewer(Scanner scanner){
         SCANNER = scanner;
         theaterController = new TheaterController();
-        movieController = new MovieController();
     }
 
     public void setUserViewer(UserViewer userViewer){
@@ -38,6 +37,8 @@ public class TheaterViewer {
     public void setLogIn(UserDTO logIn){
         this.logIn = logIn;
     }
+
+    public void setMovieList(ArrayList<MovieDTO> movieList){ this.movieList = movieList; }
 
     public void showIndex(){
         while (true) {
@@ -114,7 +115,6 @@ public class TheaterViewer {
         temp.setId(id);
 
         ArrayList<TheaterDTO> theaterList = theaterController.getList();
-        ArrayList<MovieDTO> movieList = movieController.getList();
 
         //BoardDTO b = ArrayUtil.get(array, ArrayUtil.indexOf(array, temp));
         TheaterDTO b = theaterList.get(theaterList.indexOf(temp));
@@ -156,6 +156,7 @@ public class TheaterViewer {
             theaterController.delete(b.getId());
         } else if (userChoice == 3){
             screenViewer.printList();
+            printOne(id);
         } else {
             printList();
         }

@@ -19,10 +19,13 @@ public class Movie {
 
         userViewer.setMovieViewer(movieViewer);
         userViewer.setTheaterViewer(theaterViewer);
+        userViewer.setScoreViewer(scoreViewer);
         movieViewer.setScoreViewer(scoreViewer);
         movieViewer.setUserViewer(userViewer);
+        movieViewer.setTheaterViewer(theaterViewer);
         theaterViewer.setScreenViewer(screenViewer);
         theaterViewer.setUserViewer(userViewer);
+        scoreViewer.setUserViewer(userViewer);
 
         userViewer.showIndex();
     }

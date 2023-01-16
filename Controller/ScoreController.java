@@ -15,7 +15,7 @@ public class ScoreController {
 
     public void insert(ScoreDTO scoreDTO){
         for(ScoreDTO d : list){
-            if(d.getScoreNumber()==scoreDTO.getScoreNumber()){
+            if(d.getMovieId()==scoreDTO.getMovieId()){
                 nextId = d.getScoreNumber();
             }
         }
@@ -77,6 +77,14 @@ public class ScoreController {
     public int getCommentNumber(ScoreDTO commentDTO){
         int number = list.indexOf(commentDTO);
         return number;
+    }
+
+    public void nicknameChange(int id, String changeName){
+        for(ScoreDTO b : list){
+            if(b.getUserId()==id){
+                b.setNickName(changeName);
+            }
+        }
     }
 
     /*

@@ -64,7 +64,6 @@ public class UserDTO {
     }
 
     public UserDTO(){
-
     }
 
     @Override

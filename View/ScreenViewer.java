@@ -42,6 +42,11 @@ public class ScreenViewer {
         message = "상영정보를 입력해주세요.\n 영화 : ";
         b.setMovieId(ScannerUtil.nextInt(SCANNER, message));
 
+        while(b==null){
+            message = "존재하지 않는 영화입니다. 상영정보를 다시 입력해주세요.\n 영화 : ";
+            b.setMovieId(ScannerUtil.nextInt(SCANNER, message));
+        }
+
         message = "상영 시간 : ";
         b.setScreenTime(ScannerUtil.nextLine(SCANNER, message));
 
@@ -56,7 +61,7 @@ public class ScreenViewer {
         if (screenController.isEmpty(theaterNumber.getId())) {
             System.out.println("상영정보가 존재하지 않습니다.");
             if(logIn.getLevel()==2) {
-                String message = "1.상영정보 추가";
+                String message = "1.상영정보 추가\n 뒤로 가려면 아무 키나 누르십시오.";
                 userChoice = ScannerUtil.nextInt(SCANNER, message);
                 if (userChoice == 1) {
                     writeScreen();
@@ -65,7 +70,7 @@ public class ScreenViewer {
         } else {
             screenList();
             if(logIn.getLevel()==2) {
-                String message = "1.상영정보 추가  2.상영정보 삭제  3.상영정보 수정";
+                String message = "1.상영정보 추가  2.상영정보 삭제  3.상영정보 수정\n 뒤로 가려면 아무 키나 누르십시오.";
                 userChoice = ScannerUtil.nextInt(SCANNER, message);
                 if (userChoice == 1) {
                     writeScreen();
@@ -83,6 +88,9 @@ public class ScreenViewer {
                     userChoice = ScannerUtil.nextInt(SCANNER, message);
                     b = screenController.selectById(theaterNumber.getId(), userChoice);
                     if (b != null) {
+                        for(MovieDTO d : movieList){
+                            System.out.printf("%d. %s\n", d.getId(), d.getTitle());
+                        }
                         message = "수정할 상영정보를 입력해주세요.\n 영화 : ";
                         b.setMovieId(ScannerUtil.nextInt(SCANNER, message));
 
@@ -99,7 +107,7 @@ public class ScreenViewer {
 
     public void screenList(){
         String movieName = "";
-        System.out.println("평점 목록");
+        System.out.println("상영 목록");
         ArrayList<ScreenDTO> screenList = screenController.getList();
 
         for (ScreenDTO d : screenList) {

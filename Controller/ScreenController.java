@@ -13,15 +13,15 @@ public class ScreenController {
         nextIndex = 1;
     }
 
-    public void insert(ScreenDTO scoreDTO){
+    public void insert(ScreenDTO screenDTO){
         for(ScreenDTO d : list){
-            if(d.getScreenNumber()==scoreDTO.getScreenNumber()){
+            if(d.getTheaterId()==screenDTO.getTheaterId()){
                 nextId = d.getScreenNumber();
             }
         }
-        scoreDTO.setScreenNumber(nextId+1);
-        scoreDTO.setId(nextIndex++);
-        list.add(scoreDTO);
+        screenDTO.setScreenNumber(nextId+1);
+        screenDTO.setId(nextIndex++);
+        list.add(screenDTO);
         nextId = 0;
     }
 

@@ -73,6 +73,16 @@ public class UserController {
         return null;
     }
 
+    public ArrayList<UserDTO> getList(int loginId){
+        ArrayList<UserDTO> userList = new ArrayList<>();
+        for(UserDTO u : list){
+            if(u.getId()!=loginId){
+                userList.add(u);
+            }
+        }
+        return userList;
+    }
+
     public int change(String username,int changeLevel){
         for(UserDTO u : list){
             if(username.equals(u.getUsername())){

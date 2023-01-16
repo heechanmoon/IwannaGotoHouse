@@ -6,6 +6,15 @@ public class ScreenDTO {
     private int theaterId;
     private String screenTime;
     private int screenNumber;
+    private String reservation;
+
+    public String getReservation() {
+        return reservation;
+    }
+
+    public void setReservation(String reservation) {
+        this.reservation = reservation;
+    }
 
     public int getId() {
         return id;

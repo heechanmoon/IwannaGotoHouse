@@ -4,6 +4,7 @@ import Controller.UserController;
 import Model.UserDTO;
 import util.ScannerUtil;
 
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class UserViewer {
@@ -11,6 +12,8 @@ public class UserViewer {
     private UserController userController;
     private MovieViewer movieViewer;
     private TheaterViewer theaterViewer;
+    private ScoreViewer scoreViewer;
+    private ArrayList<UserDTO> userList;
 
     private UserDTO logIn = null;
 
@@ -19,12 +22,14 @@ public class UserViewer {
         userController = new UserController();
     }
 
-    public void setMovieViewer(MovieViewer movieViewer){
-        this.movieViewer = movieViewer;
-    }
+    public void setMovieViewer(MovieViewer movieViewer){ this.movieViewer = movieViewer; }
 
     public void setTheaterViewer(TheaterViewer theaterViewer){
         this.theaterViewer = theaterViewer;
+    }
+
+    public void setScoreViewer(ScoreViewer scoreViewer){
+        this.scoreViewer = scoreViewer;
     }
 
     public void showIndex(){
@@ -157,6 +162,7 @@ public class UserViewer {
 
         message = "새로운 닉네임을 입력해주세요.";
         String newNickname = ScannerUtil.nextLine(SCANNER,message);
+        scoreViewer.changeNickname(logIn.getId(), newNickname);
 
         message = "기존 비밀번호를 입력해주세요.";
         String oldPassword = ScannerUtil.nextLine(SCANNER,message);
@@ -187,6 +193,12 @@ public class UserViewer {
     }
 
     private void change(){
+        userList = userController.getList(logIn.getId());
+
+        for(UserDTO u : userList){
+            System.out.println("아이디 : "+u.getUsername()+", 닉네임 : "+u.getNickname()+", 회원등급 : "+u.getLevel());
+        }
+
         String message = "등급을 변경할 회원의 아이디를 입력해주세요.";
         String username = ScannerUtil.nextLine(SCANNER, message);
 
