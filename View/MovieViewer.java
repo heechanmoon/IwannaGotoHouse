@@ -16,6 +16,7 @@ public class MovieViewer {
     private MovieController movieController;
     private ScoreViewer scoreViewer;
     private TheaterViewer theaterViewer;
+    private ScreenViewer screenViewer;
     private UserViewer userViewer;
     private UserDTO logIn;
 
@@ -31,6 +32,7 @@ public class MovieViewer {
     public void setScoreViewer(ScoreViewer scoreViewer){
         this.scoreViewer = scoreViewer;
     }
+    public void setScreenViewer(ScreenViewer screenViewer) { this.screenViewer = screenViewer; }
 
     public void setLogIn(UserDTO logIn){
         this.logIn = logIn;
@@ -163,8 +165,10 @@ public class MovieViewer {
         } else if (userChoice == 2) {
             movieController.delete(b.getId());
             theaterViewer.setMovieList(movieController.getList());
+            screenViewer.setDeleteMovieId(b.getId());
+            screenViewer.deleteMovie();
         } else if (userChoice == 3){
-            scoreViewer.printList(0);
+            scoreViewer.printList();
             printOne(id);
         } else {
             printList();

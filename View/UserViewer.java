@@ -121,12 +121,16 @@ public class UserViewer {
         if(logIn.getLevel()==0) {
             System.out.println("회원 등급: 일반 관람객");
             System.out.println("-------------------------------------------");
-            String message = "1. 수정 2. 탈퇴 3. 뒤로가기";
-            int userChoice = ScannerUtil.nextInt(SCANNER,message,1,3);
+            String message = "1. 수정 2. 탈퇴 3. 등업신청 4.뒤로가기";
+            int userChoice = ScannerUtil.nextInt(SCANNER,message,1,4);
             if(userChoice == 1){
                 update();
+                printOne();
             }else if(userChoice == 2){
                 delete();
+            }else if(userChoice == 3){
+                upgrade();
+                printOne();
             }
         }else if(logIn.getLevel()==1){
             System.out.println("회원 등급: 전문 평론가");
@@ -135,6 +139,7 @@ public class UserViewer {
             int userChoice = ScannerUtil.nextInt(SCANNER,message,1,3);
             if(userChoice == 1){
                 update();
+                printOne();
             }else if(userChoice == 2){
                 delete();
             }
@@ -145,10 +150,28 @@ public class UserViewer {
             int userChoice = ScannerUtil.nextInt(SCANNER,message,1,4);
             if(userChoice == 1){
                 update();
+                printOne();
             }else if(userChoice == 2){
                 delete();
             }else if(userChoice == 3){
                 change();
+                printOne();
+            }
+        }
+    }
+
+    private void upgrade(){
+        if(logIn.getLevel()==0) {
+            System.out.println("현재 등급: 일반 관람객");
+            String message = "1. 전문 평론가 등업 신청  2. 관리자 등업 신청";
+            int choice = ScannerUtil.nextInt(SCANNER, message,1,2);
+
+            if(choice==1){
+                logIn.setUpgrade(1);
+                userController.update(logIn);
+            }else if(choice==2){
+                logIn.setUpgrade(2);
+                userController.update(logIn);
             }
         }
     }
@@ -193,24 +216,58 @@ public class UserViewer {
     }
 
     private void change(){
+        String message = "1. 전문 평론가 등업 신청 관리  2. 관리자 등업 신청 관리  3. 강등\n 뒤로 가려면 아무 숫자나 입력해주세요.";
+        int userChoice = ScannerUtil.nextInt(SCANNER, message);
         userList = userController.getList(logIn.getId());
 
-        for(UserDTO u : userList){
-            System.out.println("아이디 : "+u.getUsername()+", 닉네임 : "+u.getNickname()+", 회원등급 : "+u.getLevel());
-        }
+        if(userChoice==1) {
+            for (UserDTO u : userList) {
+                if (u.getUpgrade()==1) {
+                    System.out.println("아이디 : " + u.getUsername() + ", 닉네임 : " + u.getNickname());
+                }
+            }
 
-        String message = "등급을 변경할 회원의 아이디를 입력해주세요.";
-        String username = ScannerUtil.nextLine(SCANNER, message);
+            message = "전문 평론가로 등업할 회원의 아이디를 입력해주세요.";
+            String username = ScannerUtil.nextLine(SCANNER, message);
+            int result = userController.change(username,1);
+            if(result == 0){
+                System.out.println("해당 아이디는 존재하지 않거나 등업신청을 하지 않았습니다.");
+            }else{
+                System.out.println("해당 회원의 등급이 변경되었습니다.");
+            }
+            change();
+        }else if(userChoice==2){
+            for (UserDTO u : userList) {
+                if (u.getUpgrade()==2) {
+                    System.out.println("아이디 : " + u.getUsername() + ", 닉네임 : " + u.getNickname());
+                }
+            }
 
-        message = "변경할 등급을 입력해주세요(0: 일반 관람객  1: 전문 평론가  2: 관리자)";
-        int changeLevel = ScannerUtil.nextInt(SCANNER,message,0,2);
+            message = "관리자로 등업할 회원의 아이디를 입력해주세요.";
+            String username = ScannerUtil.nextLine(SCANNER, message);
+            int result = userController.change(username,2);
+            if(result == 0){
+                System.out.println("해당 아이디는 존재하지 않거나 등업신청을 하지 않았습니다.");
+            }else{
+                System.out.println("해당 회원의 등급이 변경되었습니다.");
+            }
+            change();
+        }else if(userChoice==3){
+            for (UserDTO u : userList) {
+                if (u.getLevel()==2 || u.getLevel()==1) {
+                    System.out.println("아이디 : " + u.getUsername() + ", 닉네임 : " + u.getNickname());
+                }
+            }
 
-        int result = userController.change(username,changeLevel);
-
-        if(result == 0){
-            System.out.println("해당 회원 아이디가 존재하지않아 변경에 실패했습니다.");
-        }else{
-            System.out.println("해당 회원의 등급이 변경되었습니다.");
+            message = "일반 관람객으로 강등할 회원의 아이디를 입력해주세요.";
+            String username = ScannerUtil.nextLine(SCANNER, message);
+            int result = userController.change(username,0);
+            if(result == 0){
+                System.out.println("해당 아이디는 존재하지않습니다.");
+            }else{
+                System.out.println("해당 회원의 등급이 일반 관람객으로 강등되었습니다.");
+            }
+            change();
         }
     }
 }

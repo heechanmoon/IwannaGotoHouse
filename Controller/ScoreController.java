@@ -49,15 +49,15 @@ public class ScoreController {
         return null;
     }
 
-    public void update(int nextIndex, ScoreDTO commentDTO){
+    public void update(int nextIndex, ScoreDTO scoreDTO){
         int updateIndex = -1;
         for(ScoreDTO b : list){
             updateIndex++;
-            if(b.getId() == nextIndex){
+            if(b.getScoreNumber() == nextIndex){
                 break;
             }
         }
-        list.set(updateIndex, commentDTO);
+        list.set(updateIndex, scoreDTO);
     }
 
     public void delete(int nextIndex){

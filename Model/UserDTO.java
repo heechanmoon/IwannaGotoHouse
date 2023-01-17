@@ -6,6 +6,13 @@ public class UserDTO {
     private String password;
     private String nickname;
     private int level;
+    private int upgrade;
+
+    public void setUpgrade(int upgrade) {
+        this.upgrade = upgrade;
+    }
+
+    public int getUpgrade(){ return upgrade; }
 
     public int getLevel() {
         return level;
@@ -61,6 +68,7 @@ public class UserDTO {
         password = origin.password;
         nickname = origin.nickname;
         level = origin.level;
+        upgrade = origin.upgrade;
     }
 
     public UserDTO(){

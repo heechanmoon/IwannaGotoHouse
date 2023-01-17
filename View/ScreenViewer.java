@@ -16,6 +16,7 @@ public class ScreenViewer {
     private UserDTO logIn;
     private TheaterDTO theaterNumber;
     private ArrayList<MovieDTO> movieList;
+    private int deleteMovieId;
 
     public ScreenViewer(Scanner scanner){
         SCANNER = scanner;
@@ -25,13 +26,15 @@ public class ScreenViewer {
     public void setLogIn(UserDTO logIn){
         this.logIn = logIn;
     }
-    public void setMovieList(ArrayList<MovieDTO> movieList){this.movieList = movieList; }
+    public void setMovieList(ArrayList<MovieDTO> movieList){ this.movieList = movieList; }
     public void setTheaterNumber(TheaterDTO theaterNumber){
         this.theaterNumber = theaterNumber;
     }
+    public void setDeleteMovieId(int deleteMovieId) { this.deleteMovieId = deleteMovieId; }
 
     private void writeScreen() {
         ScreenDTO b = new ScreenDTO();
+        boolean isEmpty = true;
 
         b.setTheaterId(theaterNumber.getId());
 
@@ -42,10 +45,26 @@ public class ScreenViewer {
         message = "상영정보를 입력해주세요.\n 영화 : ";
         b.setMovieId(ScannerUtil.nextInt(SCANNER, message));
 
-        while(b==null){
+        for(MovieDTO d : movieList){
+            if(b.getMovieId()==d.getId()){
+                isEmpty = false;
+            }
+        }
+
+        while(isEmpty) {
+            for(MovieDTO d : movieList){
+                System.out.printf("%d. %s\n", d.getId(), d.getTitle());
+            }
             message = "존재하지 않는 영화입니다. 상영정보를 다시 입력해주세요.\n 영화 : ";
             b.setMovieId(ScannerUtil.nextInt(SCANNER, message));
+
+            for(MovieDTO d : movieList){
+                if(b.getMovieId()==d.getId()){
+                    isEmpty = false;
+                }
+            }
         }
+
 
         message = "상영 시간 : ";
         b.setScreenTime(ScannerUtil.nextLine(SCANNER, message));
@@ -60,7 +79,7 @@ public class ScreenViewer {
 
         if (screenController.isEmpty(theaterNumber.getId())) {
             System.out.println("상영정보가 존재하지 않습니다.");
-            if(logIn.getLevel()==2) {
+            if(logIn.getLevel()==2 && movieList!=null) {
                 String message = "1.상영정보 추가\n 뒤로 가려면 아무 키나 누르십시오.";
                 userChoice = ScannerUtil.nextInt(SCANNER, message);
                 if (userChoice == 1) {
@@ -69,7 +88,7 @@ public class ScreenViewer {
             }
         } else {
             screenList();
-            if(logIn.getLevel()==2) {
+            if(logIn.getLevel()==2 && movieList!=null) {
                 String message = "1.상영정보 추가  2.상영정보 삭제  3.상영정보 수정\n 뒤로 가려면 아무 키나 누르십시오.";
                 userChoice = ScannerUtil.nextInt(SCANNER, message);
                 if (userChoice == 1) {
@@ -83,6 +102,7 @@ public class ScreenViewer {
                     } else {
                         System.out.println("존재하지 않는 상영정보입니다.");
                     }
+                    printList();
                 } else if (userChoice == 3) {
                     message = "수정할 상영정보의 번호를 입력해주세요.";
                     userChoice = ScannerUtil.nextInt(SCANNER, message);
@@ -100,6 +120,7 @@ public class ScreenViewer {
                     } else {
                         System.out.println("수정할 권한이 없습니다.");
                     }
+                    printList();
                 }
             }
         }
@@ -120,7 +141,10 @@ public class ScreenViewer {
                 System.out.printf("(%d)%s: - %s\n", d.getScreenNumber(), movieName , d.getScreenTime());
             }
         }
+    }
 
+    public void deleteMovie(){
+        screenController.deleteMovie(deleteMovieId);
     }
 
     /*

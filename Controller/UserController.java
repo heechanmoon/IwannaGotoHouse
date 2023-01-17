@@ -23,12 +23,14 @@ public class UserController {
 
     public void insertAdmin(UserDTO userDTO){
         userDTO.setId(nextId++);
+        userDTO.setUpgrade(0);
         list.add(userDTO);
     }
 
     public void insert(UserDTO userDTO){
         userDTO.setId(nextId++);
         userDTO.setLevel(0);
+        userDTO.setUpgrade(0);
         list.add(userDTO);
     }
 
@@ -85,7 +87,8 @@ public class UserController {
 
     public int change(String username,int changeLevel){
         for(UserDTO u : list){
-            if(username.equals(u.getUsername())){
+            if(username.equals(u.getUsername()) && u.getUpgrade()==changeLevel){
+                u.setUpgrade(0);
                 u.setLevel(changeLevel);
                 update(u);
                 return 1;

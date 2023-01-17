@@ -78,6 +78,8 @@ public class ScoreDTO {
         movieId = origin.movieId;
         score = origin.score;
         review = origin.review;
+        scoreNumber = origin.scoreNumber;
+        nickName = origin.nickName;
     }
 
     public ScoreDTO(){

@@ -33,28 +33,40 @@ public class ScoreViewer {
 
     private void writeComment() {
         ScoreDTO b = new ScoreDTO();
+        boolean scoreDuplicate = false;
 
-        b.setMovieId(movieNumber.getId());
-        b.setUserId(logIn.getId());
-        b.setNickName(logIn.getNickname());
+        ArrayList<ScoreDTO> scoreList = scoreController.getList();
 
-        String message;
-
-        message = "평점을 입력해주세요.";
-        b.setScore(ScannerUtil.nextInt(SCANNER, message,1,10));
-
-        if(logIn.getLevel()==1){
-            message = "평론을 입력해주세요.";
-            b.setReview(ScannerUtil.nextLine(SCANNER, message));
+        for(ScoreDTO s : scoreList){
+            if(s.getUserId()==logIn.getId() && movieNumber.getId()==s.getMovieId()){
+                scoreDuplicate = true;
+            }
         }
 
-        scoreController.insert(b);
-        printList(0);
+        if(!scoreDuplicate) {
+
+            b.setMovieId(movieNumber.getId());
+            b.setUserId(logIn.getId());
+            b.setNickName(logIn.getNickname());
+
+            String message;
+
+            message = "평점을 입력해주세요.";
+            b.setScore(ScannerUtil.nextInt(SCANNER, message, 1, 10));
+
+            if (logIn.getLevel() == 1) {
+                message = "평론을 입력해주세요.";
+                b.setReview(ScannerUtil.nextLine(SCANNER, message));
+            }
+
+            scoreController.insert(b);
+        }else{
+            System.out.println("이미 평점을 작성하셨습니다.");
+        }
     }
 
-    public void printList(int menuChoice) {
+    public void printList() {
         int userChoice;
-        ScoreDTO b;
 
         if (scoreController.isEmpty(movieNumber.getId())) {
             System.out.println("평점이 존재하지 않습니다.");
@@ -62,62 +74,85 @@ public class ScoreViewer {
             userChoice = ScannerUtil.nextInt(SCANNER, message);
             if (userChoice == 1 && logIn.getLevel()!=2) {
                 writeComment();
+                selectMenu();
             }else if(userChoice == 1 && logIn.getLevel()==2){
                 System.out.println("관리자는 평점을 추가하거나 수정할수 없습니다.");
+                printList();
             }
-        } else {
-            if(menuChoice==0) {
-                String message = "1.전체 평점 2.일반 관람객 3.전문 평론가\n 뒤로 가려면 아무 키나 누르십시오.";
-                menuChoice = ScannerUtil.nextInt(SCANNER, message);
-            }
+        }else {
+            selectMenu();
+        }
+    }
 
-            if(menuChoice>=1 && menuChoice<=3) {
+    public void selectMenu(){
+        String message;
+        int menuChoice = 1;
+        boolean isEmpty = false;
+        ArrayList<ScoreDTO> scoreList = scoreController.getList();
+
+        while(menuChoice<=6 && menuChoice >=1 && !isEmpty) {
+            message = "1.전체 평점  2.일반 관람객  3.전문 평론가  4.평점 추가  5.평점 삭제  6.평점 수정\n 뒤로 가려면 아무 숫자나 입력하십시오.";
+            menuChoice = ScannerUtil.nextInt(SCANNER, message);
+
+            if (menuChoice >= 1 && menuChoice <= 3) {
                 scoreList(menuChoice);
+            } else if (menuChoice >= 4 && menuChoice <= 6) {
+                scoreMenu(menuChoice);
+            }
 
-                String message = "1.평점 추가  2.평점 삭제  3.평점 수정\n 뒤로 가려면 아무 키나 누르십시오.";
-                userChoice = ScannerUtil.nextInt(SCANNER, message);
-                if (userChoice == 1) {
-                    if (logIn.getLevel() != 2) {
-                        writeComment();
-                    } else {
-                        System.out.println("관리자는 평점을 추가할 수 없습니다.");
-                    }
-                } else if (userChoice == 2) {
-                    if(logIn.getLevel() !=2) {
-                        message = "삭제할 평점의 번호를 입력해주세요.";
-                        userChoice = ScannerUtil.nextInt(SCANNER, message);
-                        b = scoreController.selectById(movieNumber.getId(), userChoice);
-                        if (b != null && b.getUserId() == logIn.getId()) {
-                            scoreController.delete(b.getId());
-                        } else {
-                            System.out.println("이미 존재하지 않는 평점의 번호이거나 삭제할 권한이 없습니다.");
-                        }
-                    }else{
-                        System.out.println("관리자는 평점에 대한 수정 및 삭제 권한이 없습니다.");
-                    }
-                } else if (userChoice == 3) {
-                    if(logIn.getLevel()!=2) {
-                        message = "수정할 평점의 번호를 입력해주세요.";
-                        userChoice = ScannerUtil.nextInt(SCANNER, message);
-                        b = scoreController.selectById(movieNumber.getId(), userChoice);
-                        if (b != null && b.getUserId() == logIn.getId()) {
-                            message = "수정할 평점을 입력해주세요.";
-                            b.setScore(ScannerUtil.nextInt(SCANNER, message, 1, 10));
-
-                            if (logIn.getLevel() == 1) {
-                                message = "수정할 평론을 입력해주세요.";
-                                b.setReview(ScannerUtil.nextLine(SCANNER, message));
-                            }
-                            scoreController.update(b.getId(), b);
-                        } else {
-                            System.out.println("존재하지 않는 평점의 번호이거나 수정할 권한이 없습니다.");
-                        }
-                    }else{
-                        System.out.println("관리자는 평점에 대한 수정 및 삭제 권한이 없습니다.");
-                    }
+            isEmpty = true;
+            for(ScoreDTO d : scoreList){
+                if(d.getMovieId()==movieNumber.getId()){
+                    isEmpty = false;
                 }
+            }
+        }
+    }
 
-                printList(0);
+    public void scoreMenu(int userChoice){
+        ScoreDTO b;
+
+        String message;
+        if (userChoice == 4) {
+            if (logIn.getLevel() != 2) {
+                writeComment();
+            } else {
+                System.out.println("관리자는 평점을 추가할 수 없습니다.");
+            }
+        } else if (userChoice == 5) {
+            if(logIn.getLevel() !=2) {
+                scoreList(1);
+                message = "삭제할 평점의 번호를 입력해주세요.";
+                userChoice = ScannerUtil.nextInt(SCANNER, message);
+                b = scoreController.selectById(movieNumber.getId(), userChoice);
+                if (b != null && b.getUserId() == logIn.getId()) {
+                    scoreController.delete(b.getId());
+                } else {
+                    System.out.println("이미 존재하지 않는 평점의 번호이거나 삭제할 권한이 없습니다.");
+                }
+            }else{
+                System.out.println("관리자는 평점에 대한 수정 및 삭제 권한이 없습니다.");
+            }
+        } else if (userChoice == 6) {
+            if(logIn.getLevel()!=2) {
+                scoreList(1);
+                message = "수정할 평점의 번호를 입력해주세요.";
+                userChoice = ScannerUtil.nextInt(SCANNER, message);
+                b = scoreController.selectById(movieNumber.getId(), userChoice);
+                if (b != null && b.getUserId() == logIn.getId()) {
+                    message = "수정할 평점을 입력해주세요.";
+                    b.setScore(ScannerUtil.nextInt(SCANNER, message, 1, 10));
+
+                    if (logIn.getLevel() == 1) {
+                        message = "수정할 평론을 입력해주세요.";
+                        b.setReview(ScannerUtil.nextLine(SCANNER, message));
+                    }
+                    scoreController.update(b.getId(), b);
+                } else {
+                    System.out.println("존재하지 않는 평점의 번호이거나 수정할 권한이 없습니다.");
+                }
+            }else{
+                System.out.println("관리자는 평점에 대한 수정 및 삭제 권한이 없습니다.");
             }
         }
     }

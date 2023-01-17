@@ -23,6 +23,7 @@ public class Movie {
         movieViewer.setScoreViewer(scoreViewer);
         movieViewer.setUserViewer(userViewer);
         movieViewer.setTheaterViewer(theaterViewer);
+        movieViewer.setScreenViewer(screenViewer);
         theaterViewer.setScreenViewer(screenViewer);
         theaterViewer.setUserViewer(userViewer);
         scoreViewer.setUserViewer(userViewer);

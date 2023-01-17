@@ -36,10 +36,22 @@ public class ScannerUtil {
 
     //4. 사용자로부터 특정 범위의 정수 입력을 담당하는 nextInt()
     public static int nextInt(Scanner scanner, String message, int min, int max){
-        int temp = nextInt(scanner, message);
+        String strTemp = nextLine(scanner,message);
+        while(!strTemp.matches("\\d+")){
+            System.out.println("잘못 입력하셨습니다.");
+            strTemp = nextLine(scanner,message);
+        }
+
+        int temp = Integer.parseInt(strTemp);
+
         while(temp < min || temp > max){
             System.out.println("wrong value");
-            temp = nextInt(scanner, message);
+            strTemp = nextLine(scanner,message);
+            while(!strTemp.matches("\\d+")){
+                System.out.println("잘못 입력하셨습니다.");
+                strTemp = nextLine(scanner,message);
+            }
+            temp = Integer.parseInt(strTemp);
         }
 
         return temp;

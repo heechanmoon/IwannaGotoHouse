@@ -1,8 +1,11 @@
 package Controller;
 
+import Model.MovieDTO;
+import Model.ScoreDTO;
 import Model.ScreenDTO;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 public class ScreenController {
     private ArrayList<ScreenDTO> list;
@@ -68,6 +71,17 @@ public class ScreenController {
             }
         }
         list.remove(deleteIndex);
+    }
+
+    public void deleteMovie(int movieId){
+        ScreenDTO b;
+        Iterator<ScreenDTO> itr = list.iterator();
+        while(itr.hasNext()){
+            b = itr.next();
+            if(b.getMovieId()==movieId){
+                itr.remove();
+            }
+        }
     }
 
     public void delete(ScreenDTO commentDTO){
